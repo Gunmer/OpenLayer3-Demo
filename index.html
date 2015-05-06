@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="http://openlayers.org/en/v3.4.0/css/ol.css" type="text/css">
 	<link rel="stylesheet" href="css/ol3-demo.css" type="text/css">
 
-	<title>OpenLayer 3 Demo</title>
+	<title>OpenLayer 3 Demo[geolocation]</title>
 </head>
 <body>
     <script src="http://openlayers.org/en/v3.4.0/build/ol.js" type="text/javascript"></script>
@@ -17,10 +17,10 @@
     	</div>
     	<div class="row">
     		<label for="longitude">Longitude:</label>
-    		<input id="longitude"/>
+    		<input id="longitude" disabled/>
 
     		<label for="longitude">Latitude:</label>
-    		<input id="latitude"/>
+    		<input id="latitude" disabled/>
     	</div>
 	</div>
 
@@ -46,8 +46,28 @@
 		geolocation.on('change', function(){
 			var position = geolocation.getPosition();
 
+			var marker = new ol.Feature(new ol.geom.Point(position));
+			marker.setStyle(new ol.style.Style({
+			  image: new ol.style.Icon(({
+			    anchor: [0.5, 0.9],
+			    anchorXUnits: 'fraction',
+			    anchorYUnits: 'fraction',
+			    opacity: 1,
+			    src: 'images/marker.png',
+			    scale: 0.1
+			  }))
+			}));
+
+			var markerSource = new ol.source.Vector({
+			  features: [marker]
+			});
+			var markerLayer = new ol.layer.Vector({
+			  source: markerSource
+			});
+
 			view.setCenter(position);
-			view.setZoom(20);
+			view.setZoom(19);
+			map.addLayer(markerLayer);
 
 			$('#longitude').val(position[0])
 			$('#latitude').val(position[1])
