@@ -11,16 +11,17 @@
     <script src="http://openlayers.org/en/v3.4.0/build/ol.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="js/commons.js"></script>
     <div class="container">
     	<div class="row">
     		<div id="map" class="col-md-12"></div>
     	</div>
     	<div class="row">
     		<label for="longitude">Longitude:</label>
-    		<input id="longitude" disabled/>
+    		<input id="longitude"/>
 
     		<label for="longitude">Latitude:</label>
-    		<input id="latitude" disabled/>
+    		<input id="latitude"/>
     	</div>
 	</div>
 
@@ -44,9 +45,9 @@
 		}));
 
 		geolocation.on('change', function(){
-			var position = geolocation.getPosition();
+			var point = geolocation.getPosition();
 
-			var marker = new ol.Feature(new ol.geom.Point(position));
+			var marker = new ol.Feature(new ol.geom.Point(point));
 			marker.setStyle(new ol.style.Style({
 			  image: new ol.style.Icon(({
 			    anchor: [0.5, 0.9],
@@ -65,12 +66,14 @@
 			  source: markerSource
 			});
 
-			view.setCenter(position);
+			view.setCenter(point);
 			view.setZoom(19);
 			map.addLayer(markerLayer);
 
-			$('#longitude').val(position[0])
-			$('#latitude').val(position[1])
+			var coordinates = changePointToCoordinate(point);
+
+			$('#longitude').val(coordinates[0])
+			$('#latitude').val(coordinates[1])
 		});
 		geolocation.on('error', function(error) {
 			alert('geolocation error');
@@ -79,6 +82,8 @@
 		map.setView(view);
 		map.addLayer(layer);
 		geolocation.setTracking(true);
+		$('#longitude').val('');
+		$('#latitude').val('');
     </script>
 </body>
 </html>

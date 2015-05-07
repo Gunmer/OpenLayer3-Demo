@@ -19,3 +19,7 @@ function getMarkerSource(){
 	  features: features
 	});
 }
+
+function changePointToCoordinate(point){
+	return ol.proj.transform([point[0], point[1]], 'EPSG:3857', 'EPSG:4326')
+}
