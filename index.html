@@ -11,16 +11,17 @@
     <script src="http://openlayers.org/en/v3.4.0/build/ol.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="js/commons.js"></script>
     <div class="container">
     	<div class="row">
     		<div id="map" class="col-md-12"></div>
     	</div>
     	<div class="row">
     		<label for="longitude">Longitude:</label>
-    		<input id="longitude" disabled/>
+    		<input id="longitude"/>
 
     		<label for="longitude">Latitude:</label>
-    		<input id="latitude" disabled/>
+    		<input id="latitude"/>
     	</div>
 	</div>
 
@@ -59,10 +60,10 @@
 			}));
 
 			var markerSource = new ol.source.Vector({
-			  features: [marker]
+				features: [marker]
 			});
 			var markerLayer = new ol.layer.Vector({
-			  source: markerSource
+				source: markerSource
 			});
 
 			view.setCenter(point);
@@ -82,9 +83,8 @@
 		map.addLayer(layer);
 		geolocation.setTracking(true);
 
-		function changePointToCoordinate(point){
-			return ol.proj.transform([point[0], point[1]], 'EPSG:3857', 'EPSG:4326')
-		}
+		$('#longitude').val('');
+		$('#latitude').val('');
     </script>
 </body>
 </html>
