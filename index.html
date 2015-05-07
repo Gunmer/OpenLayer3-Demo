@@ -44,9 +44,9 @@
 		}));
 
 		geolocation.on('change', function(){
-			var position = geolocation.getPosition();
+			var point = geolocation.getPosition();
 
-			var marker = new ol.Feature(new ol.geom.Point(position));
+			var marker = new ol.Feature(new ol.geom.Point(point));
 			marker.setStyle(new ol.style.Style({
 			  image: new ol.style.Icon(({
 			    anchor: [0.5, 0.9],
@@ -65,12 +65,14 @@
 			  source: markerSource
 			});
 
-			view.setCenter(position);
+			view.setCenter(point);
 			view.setZoom(19);
 			map.addLayer(markerLayer);
 
-			$('#longitude').val(position[0])
-			$('#latitude').val(position[1])
+			var coordinates = changePointToCoordinate(point);
+
+			$('#longitude').val(coordinates[0])
+			$('#latitude').val(coordinates[1])
 		});
 		geolocation.on('error', function(error) {
 			alert('geolocation error');
@@ -79,6 +81,10 @@
 		map.setView(view);
 		map.addLayer(layer);
 		geolocation.setTracking(true);
+
+		function changePointToCoordinate(point){
+			return ol.proj.transform([point[0], point[1]], 'EPSG:3857', 'EPSG:4326')
+		}
     </script>
 </body>
 </html>
