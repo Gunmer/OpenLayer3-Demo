@@ -28,36 +28,36 @@
 	<script type="text/javascript">
 		var collections = [ 
 			[{
-				image: 'images/gryffindor.jpg',
+				image: 'images/gryffindor.png',
 				coordinates: [-3.6894776000000005, 40.5490682]
 			},
 			{
-				image: 'images/gryffindor.jpg',
+				image: 'images/gryffindor.png',
 				coordinates: [-3.6894776000000005, 40.6490682]
 			},
 			{
-				image: 'images/gryffindor.jpg',
+				image: 'images/gryffindor.png',
 				coordinates: [-3.7894776000000005, 40.6490682]
 			},
 			{
-				image: 'images/ravenclaw.jpg',
+				image: 'images/slytherin.png',
 				coordinates: [-3.7894776000000005, 40.7490682]
 			},
 			{
-				image: 'images/ravenclaw.jpg',
+				image: 'images/slytherin.png',
 				coordinates: [-3.5894776000000005, 40.7490682]
 			},
 			{
-				image: 'images/ravenclaw.jpg',
+				image: 'images/slytherin.png',
 				coordinates: [-3.7894776000000005, 40.5490682]
 			}],
 
 			[{
-				image: 'images/hufflepuff.jpg',
+				image: 'images/gryffindor.png',
 				coordinates: [-3.734776000000005, 40.599982]
 			},
 			{
-				image: 'images/slytherin.jpg',
+				image: 'images/slytherin.png',
 				coordinates: [-3.6894776000000005, 40.7490682]
 			}]
 		];
@@ -120,9 +120,9 @@
 			var feature = new ol.Feature(new ol.geom.Point(coordinate));
 			feature.setStyle(new ol.style.Style({
 			  image: new ol.style.Icon(({
+			  	anchor: [0.5,0.5],
 			    opacity: 1,
-			    src: img,
-			    scale: scale
+			    src: img
 			  }))
 			}));
 
@@ -138,7 +138,7 @@
 		function clearMarkerColelction(){
 			features = [];
 		}
-		
+
 		function getCollections(){
 			return collections;
 		}
