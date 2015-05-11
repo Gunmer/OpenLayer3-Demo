@@ -36,20 +36,55 @@
 			maxClusterRadius: 120,
 			iconCreateFunction: function (cluster) {
 				var markers = cluster.getAllChildMarkers();
-				var n = 0;
-				for (var i = 0; i < markers.length; i++) {
-					n += markers[i].number;
-				}
-				return L.divIcon({ html: n, className: 'mycluster', iconSize: L.point(40, 40) });
+
+				var result = groupBy(markers, function(item){
+					return [item.options.title];
+				}).sort();
+
+				console.debug(result);
+				var max = result[result.length -1][0].options.icon;
+				console.debug(JSON.stringify(max));
+				return max;
 			},
 			//Disable all of the defaults:
 			spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
 		});
 
+		function groupBy( array , f ){
+			var groups = {};
+			array.forEach( function( o ){
+				var group = JSON.stringify( f(o) );
+				groups[group] = groups[group] || [];
+				groups[group].push( o );  
+			});
+			return Object.keys(groups).map( function( group ){
+						return groups[group]; 
+					})
+		}
+
 
 		function populate() {
-			for (var i = 0; i < 100; i++) {
-				var m = L.marker(getRandomLatLng(map), { title: i });
+			for (var i = 0; i < 1000; i++) {
+				var image, title;
+				if(i < 250){
+					image = 'images/gryffindor.png';
+					title = 'gryffindor';
+				}else if(i < 500){
+					image = 'images/slytherin.png';
+					title = 'slytherin';
+				}else if(i < 750){
+					image = 'images/hufflepuff.png';
+					title = 'hufflepuff';
+				}else{
+					image = 'images/ravenclaw.png';
+					title = 'ravenclaw';
+				}
+
+				var m = L.marker(getRandomLatLng(map),  
+					{ 
+						title: title,
+						icon: L.icon({iconUrl: image})
+					});
 				m.number = i;
 				markers.addLayer(m);
 			}
