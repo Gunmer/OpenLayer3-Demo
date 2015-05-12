@@ -33,7 +33,7 @@
 
 		//Custom radius and icon create function
 		var markers = L.markerClusterGroup({
-			maxClusterRadius: 120,
+			maxClusterRadius: 240,
 			iconCreateFunction: function (cluster) {
 				var markers = cluster.getAllChildMarkers();
 
@@ -85,18 +85,18 @@
 						title: title,
 						icon: L.icon({iconUrl: image})
 					});
-				m.number = i;
 				markers.addLayer(m);
 			}
 			return false;
 		}
-		function populateRandomVector() {
-			for (var i = 0, latlngs = [], len = 20; i < len; i++) {
-				latlngs.push(getRandomLatLng(map));
-			}
-			var path = L.polyline(latlngs);
-			map.addLayer(path);
-		}
+		// function populateRandomVector() {
+		// 	for (var i = 0, latlngs = [], len = 20; i < len; i++) {
+		// 		latlngs.push(getRandomLatLng(map));
+		// 	}
+		// 	var path = L.polyline(latlngs);
+		// 	map.addLayer(path);
+		// }
+
 		function getRandomLatLng(map) {
 			var bounds = map.getBounds(),
 				southWest = bounds.getSouthWest(),
