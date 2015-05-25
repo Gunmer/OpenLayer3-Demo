@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://openlayers.org/en/v3.4.0/css/ol.css" type="text/css">
+	<link rel="stylesheet" href="css/demo.css" type="text/css">
+
+	<title>OpenLayer 3 Demo[Carga dinámica]</title>
+</head>
+<body>
+	<script src="js/ol-debug.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="js/commons.js"></script>
+    <div class="container">
+    	<div class="row">
+    		<div id="map" class="col-md-12"></div>
+    	</div>
+	</div>
+
+	<script type="text/javascript">
+		var collections = [];
+
+		var map = new ol.Map({target: 'map'});
+		var mapSource = new ol.source.OSM();
+		var layer = new ol.layer.Tile({source: mapSource});
+		var zoomslider = new ol.control.ZoomSlider();
+		var lastZoom = 0;
+		var features = [];
+		var markerLayer;
+    	var dataSet = getCollections();
+		var view = new ol.View({
+			center: [-415000,4960000],
+			maxZoom:19,
+			minZoom:2,
+			zoom: 10
+		});
+		
+		map.setView(view);
+		map.addLayer(layer);
+		map.addControl(zoomslider);
+
+		map.addEventListener('moveend', function(e) {
+			
+	    });
+
+	    function addMarker(order, coordinate, img, scale){
+			var feature = new ol.Feature(new ol.geom.Point(coordinate));
+			feature.setStyle(new ol.style.Style({
+			  image: new ol.style.Icon(({
+			  	anchor: [0.5,0.5],
+			    opacity: 1,
+			    src: img
+			  }))
+			}));
+
+			features[order] = feature;
+		}
+
+		function getMarkerSource(){
+			return new ol.source.Vector({
+			  features: features
+			});
+		}
+
+		function clearMarkerMap(){
+			if(!!markerLayer){}
+				map.removeLayer(markerLayer);
+				features = [];
+			}	
+		}
+
+		function getCollections(){
+			return collections;
+		}
+    </script>
+</body>
+</html>
