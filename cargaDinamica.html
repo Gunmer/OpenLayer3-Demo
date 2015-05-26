@@ -10,70 +10,113 @@
 </head>
 <body>
 	<script src="js/ol-debug.js" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="js/commons.js"></script>
-    <div class="container">
-    	<div class="row">
-    		<div id="map" class="col-md-12"></div>
-    	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="js/commons.js"></script>
+	<div class="container">
+		<div class="row">
+			<div id="map" class="col-md-12"></div>
+		</div>
 	</div>
 
 	<script type="text/javascript">
-		var collections = [];
+	var collections = [];
 
-		var map = new ol.Map({target: 'map'});
-		var mapSource = new ol.source.OSM();
-		var layer = new ol.layer.Tile({source: mapSource});
-		var zoomslider = new ol.control.ZoomSlider();
-		var lastZoom = 0;
-		var features = [];
-		var markerLayer;
-    	var dataSet = getCollections();
-		var view = new ol.View({
-			center: [-415000,4960000],
-			maxZoom:19,
-			minZoom:2,
-			zoom: 10
+	var map = new ol.Map({target: 'map'});
+	var mapSource = new ol.source.OSM();
+	var layer = new ol.layer.Tile({source: mapSource});
+	var zoomslider = new ol.control.ZoomSlider();
+	var lastZoom = 0;
+	var features = [];
+	var markerLayer;
+	var dataSet = getCollections();
+	var view = new ol.View({
+		center: [-410819.42693065025, 4945826.244194494],
+		maxZoom:19,
+		minZoom:2,
+		zoom: 16
+	});
+
+	map.setView(view);
+	map.addLayer(layer);
+	map.addControl(zoomslider);
+
+	map.addEventListener('moveend', function(e) {
+		var point = view.getCenter();
+		var resolution = view.getResolution() * 100 * view.getZoom();
+
+		console.log('center: ' + point);
+		console.log('resolution: ' + resolution);
+
+		//clearMarkerMap();
+
+		var centerPoint = getPointFeature(point);
+		var leftPoint = getPointFeature([point[0] - resolution, point[1]]);
+		var topPoint = getPointFeature([point[0], point[1] + resolution]);
+		var rightPoint = getPointFeature([point[0] + resolution, point[1]]);
+		var bottomPoint = getPointFeature([point[0], point[1] - resolution]);
+
+		features.push(centerPoint);
+		features.push(leftPoint);
+		features.push(topPoint);
+		features.push(rightPoint);
+		features.push(bottomPoint);
+
+		var markerSource = getMarkerSource();
+		markerLayer = new ol.layer.Vector({
+			source: markerSource
 		});
-		
-		map.setView(view);
-		map.addLayer(layer);
-		map.addControl(zoomslider);
 
-		map.addEventListener('moveend', function(e) {
-			
-	    });
+		map.addLayer(markerLayer);
+	});
 
-	    function addMarker(order, coordinate, img, scale){
-			var feature = new ol.Feature(new ol.geom.Point(coordinate));
-			feature.setStyle(new ol.style.Style({
-			  image: new ol.style.Icon(({
-			  	anchor: [0.5,0.5],
-			    opacity: 1,
-			    src: img
-			  }))
-			}));
+	function getPointFeature(point){
+		var positionFeature = new ol.Feature(new ol.geom.Point(point));
+		positionFeature.setStyle(new ol.style.Style({
+			image: new ol.style.Circle({
+				radius: 6,
+				fill: new ol.style.Fill({
+					color: '#3399CC'
+				}),
+				stroke: new ol.style.Stroke({
+					color: '#fff',
+					width: 2
+				})
+			})
+		}));
 
-			features[order] = feature;
-		}
+		return positionFeature;
+	}
 
-		function getMarkerSource(){
-			return new ol.source.Vector({
-			  features: features
-			});
-		}
+	function addMarker(order, coordinate, img, scale){
+		var feature = new ol.Feature(new ol.geom.Point(coordinate));
+		feature.setStyle(new ol.style.Style({
+			image: new ol.style.Icon(({
+				anchor: [0.5,0.5],
+				opacity: 1,
+				src: img
+			}))
+		}));
 
-		function clearMarkerMap(){
-			if(!!markerLayer){}
-				map.removeLayer(markerLayer);
-				features = [];
-			}	
-		}
+		features[order] = feature;
+	}
 
-		function getCollections(){
-			return collections;
-		}
-    </script>
+	function getMarkerSource(){
+		return new ol.source.Vector({
+			features: features
+		});
+	}
+
+	function clearMarkerMap(){
+		if(!!markerLayer){
+			map.removeLayer(markerLayer);
+			features = [];
+		}	
+	}
+
+	function getCollections(){
+		return collections;
+	}
+	</script>
 </body>
 </html>
