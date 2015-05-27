@@ -43,12 +43,15 @@
 
 	map.addEventListener('moveend', function(e) {
 		var point = view.getCenter();
-		var resolution = view.getResolution() * 100 * view.getZoom();
+		var resolution = view.getResolution();
 
 		console.log('center: ' + point);
 		console.log('resolution: ' + resolution);
 
+		resolution = resolution * 100 * view.getZoom();
+
 		//clearMarkerMap();
+		//view.calculateExtent(map.getSize())
 
 		var centerPoint = getPointFeature(point);
 		var leftPoint = getPointFeature([point[0] - resolution, point[1]]);
