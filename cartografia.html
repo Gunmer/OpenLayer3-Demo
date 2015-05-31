@@ -4,15 +4,18 @@
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 	<link rel="stylesheet" href="http://openlayers.org/en/v3.4.0/css/ol.css" type="text/css">
-	<link rel="stylesheet" href="css/demo.css" type="text/css">
 
 	<title>OpenLayer 3 Demo[Cartografias]</title>
 </head>
 <body>
-	<script src="js/ol-debug.js" type="text/javascript"></script>
+	<script src="http://openlayers.org/en/v3.4.0/build/ol.js" type="text/javascript"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-	<script src="js/commons.js"></script>
+
+	<h1>
+		<span>Cartography type: </span>
+		<span id="title"></span>
+	</h1>
 	<div class="container">
 		<div class="row">
 			<div id="map" class="col-md-12"></div>
@@ -21,29 +24,39 @@
 
 	<script type="text/javascript">
 	var mapLayer = new ol.layer.Tile({
-            source: hyb()
-          });
+		source: hyb()
+	});
 	var map = new ol.Map({
-        target: 'map',
-        layers: [
-          mapLayer
-        ],
-        view: new ol.View({
-          center: [-410819.42693065025, 4945826.244194494],
-          maxZoom: 19,
-          minZoom: 2,
-          zoom: 2
-        })
-      });
+		target: 'map',
+		layers: [
+		mapLayer
+		],
+		view: new ol.View({
+			center: [-410819.42693065025, 4945826.244194494],
+			maxZoom: 19,
+			minZoom: 2,
+			zoom: 2
+		})
+	});
 
 
 	map.addEventListener('moveend', function(e) {
-		if(10 < getZoom()){
+		if(12 < getZoom()){
+			mapLayer.setSource(osm2());
+			console.info('Open Street Map 2');
+			$('#title').html('Open Street Map 2');
+		}else if(7 < getZoom()){
 			mapLayer.setSource(osm());
 			console.info('Open Street Map');
+			$('#title').html('Open Street Map');
+		}else if(5 < getZoom()){
+			mapLayer.setSource(hyb());
+			console.info('Hybried');
+			$('#title').html('Hybried');
 		}else{
 			mapLayer.setSource(sat());
 			console.info('Satellite');
+			$('#title').html('Satellite');
 		}
 	});
 
@@ -61,6 +74,12 @@
 
 	function hyb(){
 		return new ol.source.MapQuest({layer: 'hyb'});
+	}
+
+	function osm2(){
+		return new ol.source.XYZ({
+			url: 'http://c.tile.osm.org/{z}/{x}/{y}.png'
+		});
 	}
 
 	</script>
